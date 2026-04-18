@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TC Admin | Dashboard</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Google Font: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+</head>
+<body>
+    
+<div class="min-h-screen bg-cover bg-center bg-fixed relative" 
+     style="background-image: url('{% static 'images/userdashboard.jpg' %}');">
+
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-10">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-900">My Dashboard</h1>
+            <p class="text-gray-500 mt-1">Track your Transfer Certificate (TC) requests</p>
+        </div>
+        
+        <a href="/request-tc/" 
+           class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-2xl font-semibold flex items-center gap-3 transition-all shadow-lg shadow-blue-200">
+            <span class="text-xl">📄</span>
+            Request New TC
+        </a>
+                        <a href="{% url 'logout' %}" class="nav-link" style="color: #f87171;">
+                    <span>🚪</span> Logout
+                </a>
+        
+
+    </div>
+
+    <!-- Stats Overview -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+        <div class="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
+            <p class="text-gray-500 text-sm">Total Requests</p>
+            <p class="text-4xl font-bold text-gray-900 mt-3">{{ students|length }}</p>
+        </div>
+        <div class="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
+            <p class="text-gray-500 text-sm">info</p>
+            <p class="text-2xl font-bold text-amber-100 mt-3">
+               only admin can approval your request.once admin approved your request to you can dowload
+            </p>
+        </div>
+        <div class="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
+            <p class="text-gray-500 text-sm">important info</p>
+         
+            <p class="text-2xl font-thin text-gray-500 mt-3">you give your name to the request form login name will give ,once change name dont show your inputs your dashoard page  </p>
+        </div>
+    </div>
+
+    <!-- Requests Table -->
+    <div class="bg-white rounded-3xl shadow-sm overflow-hidden">
+        
+        <div class="px-8 py-6 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
+            <h2 class="font-semibold text-xl text-gray-800">My TC Requests</h2>
+            <span class="text-sm text-gray-500">{{ students|length }} Requests</span>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead>
+                    <tr class="bg-gray-50">
+                        <th class="px-8 py-5 text-left text-sm font-semibold text-gray-600">Admission No</th>
+                        <th class="px-8 py-5 text-left text-sm font-semibold text-gray-600">Branch / Semester</th>
+                        <th class="px-8 py-5 text-left text-sm font-semibold text-gray-600">Status</th>
+                        <th class="px-8 py-5 text-left text-sm font-semibold text-gray-600">Download TC</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100">
+                    {% for student in students %}
+                    <tr class="hover:bg-gray-50 transition-colors">
+                        <td class="px-8 py-6 font-medium text-gray-900">{{ student.admission_no }}</td>
+                        <td class="px-8 py-6 text-gray-700">{{ student.branch_sem }}</td>
+                        <td class="px-8 py-6">
+                            {% if student.status == 'pending' %}
+                                <span class="inline-flex px-5 py-1.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-700">
+                                    ⏳ Pending
+                                </span>
+                            {% elif student.status == 'approved' %}
+                                <span class="inline-flex px-5 py-1.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-700">
+                                    ✅ Approved
+                                </span>
+                            {% else %}
+                                <span class="inline-flex px-5 py-1.5 rounded-full text-xs font-semibold bg-red-100 text-red-700">
+                                    ❌ Rejected
+                                </span>
+                            {% endif %}
+                        </td>
+                        <td class="px-8 py-6">
+                            {% if student.status == 'approved' %}
+                                <a href="{% url 'generate_tc' student.id %}" 
+                                   class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-2xl text-sm font-medium transition-all">
+                                    <span>📥</span> Download TC
+                                </a>
+                            {% else %}
+                                <span class="text-gray-400 text-sm">Not Available</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="px-8 py-16 text-center text-gray-400">
+                            You haven't made any TC requests yet.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="h-16"></div>
+
+</div>
+
+
+    
+</body>
+</html>

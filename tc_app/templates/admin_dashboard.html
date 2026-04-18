@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="p-8">
+
+    <!-- Page Header -->
+    <div class="flex justify-between items-center mb-10">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
+            <p class="text-gray-500 mt-1">Overview of Transfer Certificate (TC) requests</p>
+        </div>
+        
+        <a href="{% url 'upload_excel' %}" 
+           class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-2xl font-medium flex items-center gap-2 transition-all shadow-sm">
+            📤 Upload Excel
+        </a>
+    </div>
+
+    <!-- Status Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+        <div class="bg-white rounded-3xl p-7 shadow-sm border border-gray-100">
+            <p class="text-gray-500 text-sm font-medium">Total Requests</p>
+            <p class="text-4xl font-bold text-slate-800 mt-4">{{ total|default:0 }}</p>
+        </div>
+        
+        <div class="bg-white rounded-3xl p-7 shadow-sm border border-gray-100">
+            <p class="text-gray-500 text-sm font-medium">Pending</p>
+            <p class="text-4xl font-bold text-amber-600 mt-4">{{ pending|default:0 }}</p>
+        </div>
+        
+        <div class="bg-white rounded-3xl p-7 shadow-sm border border-gray-100">
+            <p class="text-gray-500 text-sm font-medium">Approved</p>
+            <p class="text-4xl font-bold text-emerald-600 mt-4">{{ approved|default:0 }}</p>
+        </div>
+        
+        <div class="bg-white rounded-3xl p-7 shadow-sm border border-gray-100">
+            <p class="text-gray-500 text-sm font-medium">Rejected</p>
+            <p class="text-4xl font-bold text-red-600 mt-4">{{ rejected|default:0 }}</p>
+        </div>
+    </div>
+
+    <!-- Search & Filter -->
+    <div class="bg-white rounded-3xl p-6 shadow-sm mb-8">
+        <form method="GET" class="flex flex-wrap gap-4 items-end">
+            <div class="flex-1 min-w-[280px]">
+                <label class="block text-sm font-medium text-gray-600 mb-2">Search</label>
+                <input 
+                    type="text" 
+                    name="q" 
+                    value="{{ request.GET.q|default:'' }}"
+                    placeholder="Search by Name or Admission No"
+                    class="w-full px-5 py-3.5 border border-gray-300 rounded-2xl focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-200">
+            </div>
+
+            <div class="min-w-[200px]">
+                <label class="block text-sm font-medium text-gray-600 mb-2">Branch</label>
+                <select name="branch" 
+                        class="w-full px-5 py-3.5 border border-gray-300 rounded-2xl focus:outline-none focus:border-blue-500">
+                    <option value="">All Branches</option>
+                    {% for b in branches %}
+                    <option value="{{ b }}" {% if b == request.GET.branch %}selected{% endif %}>{{ b }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <button type="submit" 
+                    class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3.5 rounded-2xl font-medium transition-all">
+                Search
+            </button>
+
+            {% if request.GET.q or request.GET.branch %}
+            <a href="{% url 'admin_dashboard' %}" 
+               class="text-gray-500 hover:text-red-600 px-4 py-3.5 text-sm font-medium">
+                Clear Filters
+            </a>
+            {% endif %}
+        </form>
+    </div>
+
+    <!-- Student Table -->
+    <div class="bg-white rounded-3xl shadow-sm overflow-hidden">
+        <div class="px-8 py-6 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+            <h2 class="font-semibold text-xl text-gray-800">Recent TC Requests</h2>
+            <span class="text-sm text-gray-500">{{ students|length }} students found</span>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full min-w-full">
+                <thead>
+                    <tr class="bg-gray-50">
+                        <th class="px-8 py-5 text-left text-sm font-semibold text-gray-600">Name</th>
+                        <th class="px-8 py-5 text-left text-sm font-semibold text-gray-600">Admission No</th>
+                        <th class="px-8 py-5 text-left text-sm font-semibold text-gray-600">Status</th>
+                        <th class="px-8 py-5 text-left text-sm font-semibold text-gray-600">Action</th>
+                        <th class="px-8 py-5 text-left text-sm font-semibold text-gray-600">Delete</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100">
+                    {% for student in students %}
+                    <tr class="hover:bg-gray-50 transition-colors">
+                        <td class="px-8 py-6 font-medium text-gray-900">{{ student.name }}</td>
+                        <td class="px-8 py-6 text-gray-700">{{ student.admission_no }}</td>
+                        <td class="px-8 py-6">
+                            {% if student.status == 'pending' %}
+                                <span class="inline-flex px-5 py-1.5 text-xs font-semibold rounded-full bg-amber-100 text-amber-700">
+                                    Pending
+                                </span>
+                            {% elif student.status == 'approved' %}
+                                <span class="inline-flex px-5 py-1.5 text-xs font-semibold rounded-full bg-emerald-100 text-emerald-700">
+                                    Approved
+                                </span>
+                            {% elif student.status == 'rejected' %}
+                                <span class="inline-flex px-5 py-1.5 text-xs font-semibold rounded-full bg-red-100 text-red-700">
+                                    Rejected
+                                </span>
+                            {% endif %}
+                        </td>
+                        <td class="px-8 py-6">
+                            {% if student.status == 'pending' %}
+                                <div class="flex gap-3">
+                                    <a href="/approve/{{ student.id }}/" 
+                                       class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2.5 rounded-2xl text-sm font-medium transition-all">
+                                        Approve
+                                    </a>
+                                    <a href="/reject/{{ student.id }}/" 
+                                       class="bg-red-600 hover:bg-red-700 text-white px-6 py-2.5 rounded-2xl text-sm font-medium transition-all">
+                                        Reject
+                                    </a>
+                                </div>
+                            {% else %}
+                                <span class="text-emerald-600 font-semibold flex items-center gap-1">
+                                    ✓ Processed
+                                </span>
+                            {% endif %}
+                        </td>
+                        <td class="px-8 py-6">
+                            <a href="{% url 'stud_del' student.id %}" 
+                               onclick="return confirm('Delete this student record?')"
+                               class="text-red-600 hover:text-red-700 font-medium text-sm hover:underline">
+                                Delete
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="px-8 py-20 text-center text-gray-400 text-lg">
+                            No student records found.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

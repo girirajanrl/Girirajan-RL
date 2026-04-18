@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="p-8">
+
+    <!-- Page Header -->
+    <div class="flex justify-between items-center mb-10">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-900">Rejected TC Requests</h1>
+            <p class="text-gray-500 mt-1">List of Transfer Certificate applications that were rejected</p>
+        </div>
+        
+        <div class="text-sm text-gray-500 bg-white px-5 py-2.5 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-2">
+            <span class="text-red-500">●</span>
+            {{ rejected|length }} Rejected Requests
+        </div>
+    </div>
+
+    <!-- Table Card -->
+    <div class="bg-white rounded-3xl shadow-sm overflow-hidden">
+
+        <!-- Table Header -->
+        <div class="px-8 py-6 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
+            <h2 class="font-semibold text-xl text-gray-800">Rejected Applications</h2>
+            <span class="text-red-600 text-sm font-medium">{{ rejected|length }} students</span>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead>
+                    <tr class="bg-gray-50">
+                        <th class="px-8 py-5 text-left text-sm font-semibold text-gray-600">Student Name</th>
+                        <th class="px-8 py-5 text-left text-sm font-semibold text-gray-600">Admission No</th>
+                        <th class="px-8 py-5 text-left text-sm font-semibold text-gray-600">Status</th>
+                        <th class="px-8 py-5 text-left text-sm font-semibold text-gray-600">Action</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100">
+                    {% for student in rejected %}
+                    <tr class="hover:bg-gray-50 transition-all duration-200">
+                        <td class="px-8 py-6">
+                            <div class="font-semibold text-gray-900">{{ student.name }}</div>
+                        </td>
+                        <td class="px-8 py-6 text-gray-700 font-medium">{{ student.admission_no }}</td>
+                        <td class="px-8 py-6">
+                            <span class="inline-flex items-center px-5 py-1.5 rounded-full text-xs font-semibold bg-red-100 text-red-700">
+                                ❌ Rejected
+                            </span>
+                        </td>
+                        <td class="px-8 py-6">
+                            {% if student.status == 'rejected' %}
+                                <a href="/approve/{{ student.id }}/" 
+                                   onclick="return confirm('Are you sure you want to approve this rejected request?')"
+                                   class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-2xl text-sm font-medium transition-all">
+                                    ✅ Approve Again
+                                </a>
+                            {% else %}
+                                <span class="text-emerald-600 font-semibold">✓ Processed</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="px-8 py-20 text-center">
+                            <div class="text-gray-400 text-lg">
+                                No rejected requests yet.
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="h-12"></div>
+
+</div>
+
+{% endblock %}

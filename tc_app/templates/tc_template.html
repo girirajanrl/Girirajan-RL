@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+
+<style>
+@page {
+    size: A4;
+    margin: 0;
+}
+
+body {
+    margin: 0;
+}
+
+/* PAGE */
+.page {
+    position: relative;
+    width: 210mm;
+    height: 297mm;
+}
+
+/* BACKGROUND IMAGE */
+.bg {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+/* TEXT */
+.text {
+    position: absolute;
+    font-family: "Times New Roman";
+    font-size: 13px;
+}
+
+/* POSITIONS (adjust once if needed) */
+
+.serial { top: 120px; left: 100px; }
+.admission { top: 120px; right: 120px; }
+
+.name { top: 165px; left: 300px; }
+.father { top: 190px; left: 300px; }
+.nationality { top: 215px; left: 300px; }
+.community { top: 240px; left: 300px; }
+.sex { top: 265px; left: 300px; }
+.dob { top: 290px; left: 300px; }
+.admission_date { top: 315px; left: 300px; }
+
+.id1 { top: 340px; left: 300px; }
+.id2 { top: 365px; left: 300px; }
+
+.branch { top: 390px; left: 300px; }
+.promotion { top: 415px; left: 300px; }
+.fees { top: 440px; left: 300px; }
+.scholarship { top: 465px; left: 300px; }
+.medium { top: 490px; left: 300px; }
+.conduct { top: 515px; left: 300px; }
+.tc_date { top: 540px; left: 300px; }
+.leaving { top: 565px; left: 300px; }
+
+.decl_date { top: 720px; left: 120px; }
+
+</style>
+
+</head>
+
+<body>
+
+<div class="page">
+
+    <!-- BACKGROUND -->
+    <img src="{{ bg_path }}" class="bg">
+
+    <!-- DATA -->
+    <div class="text serial">{{ student.serial_no }}</div>
+    <div class="text admission">{{ student.admission_no }}</div>
+
+    <div class="text name">{{ student.name }}</div>
+    <div class="text father">{{ student.father_name }}</div>
+    <div class="text nationality">{{ student.religion_caste }}</div>
+    <div class="text community">{{ student.community }}</div>
+    <div class="text sex">{{ student.sex }}</div>
+    <div class="text dob">{{ student.dob }}</div>
+    <div class="text admission_date">{{ student.admission_date }}</div>
+
+    <div class="text id1">{{ student.identification_mark1 }}</div>
+    <div class="text id2">{{ student.identification_mark2 }}</div>
+
+    <div class="text branch">{{ student.branch_sem }}</div>
+    <div class="text promotion">{{ student.promotion }}</div>
+    <div class="text fees">{{ student.fees_paid }}</div>
+    <div class="text scholarship">{{ student.scholarship }}</div>
+    <div class="text medium">{{ student.medium }}</div>
+    <div class="text conduct">{{ student.conduct }}</div>
+    <div class="text tc_date">{{ student.tc_issue_date }}</div>
+    <div class="text leaving">{{ student.leaving_date }}</div>
+
+    <div class="text decl_date">{{ student.declaration_date }}</div>
+
+</div>
+
+</body>
+</html>

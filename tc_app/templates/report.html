@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+                <div class="text-blue pt-7  text-lg font-medium bg-green">
+                <a href="{% url 'admin_dashboard' %}" class="nav-link">
+                    return admin_dashboard
+                </a>
+                </div>
+
+            <!-- CHART -->
+        <div style="background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.06);">
+            <h3 style="margin-bottom: 20px; color: #1e2937;">TC Requests Overview</h3>
+            <canvas id="myChart"></canvas>
+        </div>
+
+
+
+<script>
+    const labels = {{ labels|safe }};
+    const data = {{ values|safe }};
+
+    const ctx = document.getElementById('myChart');
+
+    new Chart(ctx, {
+        type: 'bar',   // bar / pie / doughnut
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Student Count',
+                data: data
+            }]
+        }
+    });
+</script>
+</body>
+</html>

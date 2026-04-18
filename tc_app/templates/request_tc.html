@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TC Admin | Dashboard</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Google Font: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+</head>
+<body>
+
+<div class="min-h-screen bg-cover bg-center bg-fixed relative" 
+     style="background-image: url('{% static 'images/requesttc.jpg' %}');">
+
+    <!-- Overlay for better readability -->
+    <div class="absolute inset-0 bg-black/60"></div>
+
+    <div class="relative min-h-screen flex items-center justify-center p-6">
+        <div class="max-w-lg w-full">
+<a href="{% url 'user_dashboard' %}" class="font-bold color-green text-3xl">Go to dashboard</a>
+            <!-- Card -->
+            <div class="bg-white/2 backdrop-blur-xl rounded-3xl shadow-2xl p-10 border border-white/20">
+
+                <!-- Header -->
+                <div class="text-center mb-10">
+                    <div class="mx-auto w-20 h-20 bg-blue-100 rounded-2xl flex items-center justify-center text-4xl mb-4">
+                        📄
+                    </div>
+                    <h1 class="text-3xl font-bold text-gray-900">Request Transfer Certificate</h1>
+                    <p class="text-gray-600 mt-3">Please fill in your details to submit a TC request</p>
+    
+              
+                </div>
+
+  
+
+                <!-- Form -->
+                <form method="POST" class="space-y-8">
+                    {% csrf_token %}
+
+              {{request_form.as_p}}
+
+                    <!-- Submit Button -->
+                    <button 
+                        type="submit"
+                        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 rounded-2xl text-lg transition-all active:scale-95 shadow-lg shadow-blue-300">
+                        Submit TC Request
+                    </button>
+                </form>
+
+                <!-- Note -->
+                <p class="text-center text-gray-500 text-sm mt-8">
+                    Your request will be reviewed by the admin team
+                </p>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+{% if messages %}
+    <script>
+        {% for message in messages %}
+            alert("{{ message|escapejs }}");
+        {% endfor %}
+    </script>
+{% endif %}
+</body>
+</html>

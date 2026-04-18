@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="p-8">
+
+    <!-- Page Header -->
+    <div class="flex justify-between items-center mb-10">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-900">Pending TC Requests</h1>
+            <p class="text-gray-500 mt-1">Review and process pending Transfer Certificate applications</p>
+        </div>
+        
+        <div class="text-sm text-gray-500 bg-white px-5 py-2.5 rounded-2xl shadow-sm border border-gray-100">
+            {{ pending|length }} Pending Requests
+        </div>
+    </div>
+
+
+    <!-- Pending Table -->
+    <div class="bg-white rounded-3xl shadow-sm overflow-hidden">
+        
+        <!-- Table Header -->
+        <div class="px-8 py-6 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
+            <h2 class="font-semibold text-xl text-gray-800">Pending Applications</h2>
+            <span class="text-emerald-600 text-sm font-medium">{{ pending|length }} students awaiting approval</span>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead>
+                    <tr class="bg-gray-50">
+                        <th class="px-8 py-5 text-left text-sm font-semibold text-gray-600">Student Name</th>
+                        <th class="px-8 py-5 text-left text-sm font-semibold text-gray-600">Admission No</th>
+                        <th class="px-8 py-5 text-left text-sm font-semibold text-gray-600">Status</th>
+                        <th class="px-8 py-5 text-left text-sm font-semibold text-gray-600">Action</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100">
+                    {% for student in pending %}
+                    <tr class="hover:bg-gray-50 transition-all duration-200">
+                        <td class="px-8 py-6">
+                            <div class="font-semibold text-gray-900">{{ student.name }}</div>
+                        </td>
+                        <td class="px-8 py-6 text-gray-700 font-medium">{{ student.admission_no }}</td>
+                        <td class="px-8 py-6">
+                            <span class="inline-flex items-center px-5 py-1.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-700">
+                                ⏳ Pending
+                            </span>
+                        </td>
+                        <td class="px-8 py-6">
+                            <div class="flex gap-3">
+                                <a href="/approve/{{ student.id }}/" 
+                                   class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-2xl text-sm font-medium transition-all active:scale-95">
+                                    ✅ Approve
+                                </a>
+                                <a href="/reject/{{ student.id }}/" 
+                                   class="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-2xl text-sm font-medium transition-all active:scale-95">
+                                    ❌ Reject
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="px-8 py-20 text-center">
+                            <div class="text-gray-400 text-lg">
+                                🎉 No pending requests at the moment
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Extra spacing -->
+    <div class="h-12"></div>
+
+</div>
+
+{% endblock %}

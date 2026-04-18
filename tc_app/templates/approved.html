@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="p-8">
+
+    <!-- Page Header -->
+    <div class="flex justify-between items-center mb-10">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-900">Approved TC Requests</h1>
+            <p class="text-gray-500 mt-1">Successfully processed Transfer Certificate applications</p>
+        </div>
+        
+        <div class="flex items-center gap-3 bg-white px-6 py-3 rounded-2xl shadow-sm border border-gray-100">
+            <span class="text-emerald-500 text-xl">✅</span>
+            <span class="text-sm font-medium text-gray-600">{{ approved|length }} Approved Requests</span>
+        </div>
+    </div>
+
+    <!-- Main Table Card -->
+    <div class="bg-white rounded-3xl shadow-sm overflow-hidden">
+
+        <!-- Table Header -->
+        <div class="px-8 py-6 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
+            <h2 class="font-semibold text-xl text-gray-800">Approved Applications</h2>
+            <span class="text-emerald-600 text-sm font-medium">{{ approved|length }} students</span>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead>
+                    <tr class="bg-gray-50">
+                        <th class="px-8 py-5 text-left text-sm font-semibold text-gray-600">Student Name</th>
+                        <th class="px-8 py-5 text-left text-sm font-semibold text-gray-600">Admission No</th>
+                        <th class="px-8 py-5 text-left text-sm font-semibold text-gray-600">Status</th>
+                        <th class="px-8 py-5 text-left text-sm font-semibold text-gray-600">Action</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100">
+                    {% for student in approved %}
+                    <tr class="hover:bg-gray-50 transition-all duration-200">
+                        <td class="px-8 py-6">
+                            <div class="font-semibold text-gray-900">{{ student.name }}</div>
+                        </td>
+                        <td class="px-8 py-6 text-gray-700 font-medium">{{ student.admission_no }}</td>
+                        <td class="px-8 py-6">
+                            <span class="inline-flex items-center px-5 py-1.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-700">
+                                ✅ Approved
+                            </span>
+                        </td>
+                        <td class="px-8 py-6">
+                            <span class="inline-flex items-center gap-2 text-emerald-600 font-semibold">
+                                <span class="text-xl">✓</span> 
+                                Processed Successfully
+                            </span>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="px-8 py-20 text-center">
+                            <div class="text-gray-400 text-lg">
+                                No approved requests yet.
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="h-12"></div>
+
+</div>
+
+{% endblock %}
